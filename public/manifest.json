@@ -1,22 +1,21 @@
 {
-  "name": "Zenith Tasks & Lifestyle Manager",
-  "short_name": "Zenith Tasks",
+  "name": "to-do-listของฉัน",
+  "short_name": "to-do-list",
   "description": "To-Do List, ตู้เย็น, สูตรอาหาร, และรายการซื้อของ พร้อมซิงค์ Firebase",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
-  "theme_color": "#4f46e5",
+  "theme_color": "#2563EB",
   "icons": [
     {
-      "src": "/apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
     },
     {
-      "src": "/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ]
 }
