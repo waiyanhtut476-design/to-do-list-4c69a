@@ -1,0 +1,277 @@
+{
+  "entities": {
+    "Todo": {
+      "title": "Todo",
+      "description": "Represents a task/todo item in the application",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique task ID",
+          "maxLength": 128
+        },
+        "title": {
+          "type": "string",
+          "description": "Task title",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional notes or details for the task",
+          "maxLength": 2000
+        },
+        "completed": {
+          "type": "boolean",
+          "description": "Completion status of the task"
+        },
+        "priority": {
+          "type": "string",
+          "description": "Priority level: low, medium, high, urgent",
+          "enum": ["low", "medium", "high", "urgent"]
+        },
+        "category": {
+          "type": "string",
+          "description": "Category or tag name",
+          "maxLength": 50
+        },
+        "tagColor": {
+          "type": "string",
+          "description": "Color code for the category badge",
+          "maxLength": 30
+        },
+        "dueDate": {
+          "type": "string",
+          "description": "Due date and time in ISO format or empty string",
+          "maxLength": 50
+        },
+        "reminderEnabled": {
+          "type": "boolean",
+          "description": "Whether push/sound reminders are activated"
+        },
+        "notified": {
+          "type": "boolean",
+          "description": "Whether deadline reminder has been triggered"
+        },
+        "subtasks": {
+          "type": "array",
+          "description": "List of subtasks for breakdown"
+        },
+        "order": {
+          "type": "number",
+          "description": "Position order for sorting"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner user ID",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp",
+          "maxLength": 50
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update timestamp",
+          "maxLength": 50
+        }
+      },
+      "required": ["title", "completed", "priority", "category", "userId"]
+    },
+    "FridgeItem": {
+      "title": "FridgeItem",
+      "description": "Represents food or ingredients stored in the fridge",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique fridge item ID",
+          "maxLength": 128
+        },
+        "name": {
+          "type": "string",
+          "description": "Item name",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Quantity amount"
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit of measurement",
+          "maxLength": 50
+        },
+        "category": {
+          "type": "string",
+          "description": "Food category",
+          "maxLength": 50
+        },
+        "expiryDate": {
+          "type": "string",
+          "description": "Expiry date in ISO or date format",
+          "maxLength": 50
+        },
+        "notes": {
+          "type": "string",
+          "description": "Storage notes",
+          "maxLength": 1000
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner user ID",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp",
+          "maxLength": 50
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update timestamp",
+          "maxLength": 50
+        }
+      },
+      "required": ["name", "quantity", "unit", "category", "userId"]
+    },
+    "Recipe": {
+      "title": "Recipe",
+      "description": "Represents a cooking recipe",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique recipe ID",
+          "maxLength": 128
+        },
+        "title": {
+          "type": "string",
+          "description": "Recipe name",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string",
+          "description": "Recipe summary or notes",
+          "maxLength": 2000
+        },
+        "servings": {
+          "type": "number",
+          "description": "Number of servings"
+        },
+        "cookTime": {
+          "type": "string",
+          "description": "Cooking time estimate",
+          "maxLength": 50
+        },
+        "category": {
+          "type": "string",
+          "description": "Recipe category",
+          "maxLength": 50
+        },
+        "ingredients": {
+          "type": "array",
+          "description": "List of ingredient objects"
+        },
+        "steps": {
+          "type": "array",
+          "description": "Step-by-step instructions"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner user ID",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp",
+          "maxLength": 50
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update timestamp",
+          "maxLength": 50
+        }
+      },
+      "required": ["title", "servings", "category", "userId"]
+    },
+    "ShoppingItem": {
+      "title": "ShoppingItem",
+      "description": "Represents an item on the shopping list",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique shopping item ID",
+          "maxLength": 128
+        },
+        "name": {
+          "type": "string",
+          "description": "Item name to buy",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Quantity amount"
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit of measurement",
+          "maxLength": 50
+        },
+        "category": {
+          "type": "string",
+          "description": "Shopping category",
+          "maxLength": 50
+        },
+        "completed": {
+          "type": "boolean",
+          "description": "Bought/checked status"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Extra shopping notes",
+          "maxLength": 1000
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner user ID",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp",
+          "maxLength": 50
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update timestamp",
+          "maxLength": 50
+        }
+      },
+      "required": ["name", "quantity", "unit", "completed", "userId"]
+    }
+  },
+  "firestore": {
+    "/todos/{todoId}": {
+      "schema": "Todo",
+      "description": "Task management items"
+    },
+    "/fridge_items/{itemId}": {
+      "schema": "FridgeItem",
+      "description": "Food and ingredients in fridge"
+    },
+    "/recipes/{recipeId}": {
+      "schema": "Recipe",
+      "description": "Cooking recipes and ingredient lists"
+    },
+    "/shopping_items/{itemId}": {
+      "schema": "ShoppingItem",
+      "description": "Shopping list items"
+    }
+  }
+}

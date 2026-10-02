@@ -1,0 +1,123 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // --- Todo Validation ---
+    function isValidTodo(data) {
+      return data.keys().hasAll(['title', 'completed', 'priority', 'category', 'userId']) &&
+             data.keys().hasOnly(['id', 'title', 'description', 'completed', 'priority', 'category', 'tagColor', 'dueDate', 'reminderEnabled', 'notified', 'subtasks', 'order', 'userId', 'createdAt', 'updatedAt']) &&
+             data.userId == request.auth.uid &&
+             data.title is string && data.title.size() >= 1 && data.title.size() <= 300 &&
+             data.completed is bool &&
+             data.priority in ['low', 'medium', 'high', 'urgent'] &&
+             data.category is string && data.category.size() <= 50 &&
+             (!('id' in data) || (data.id is string && data.id.size() <= 128)) &&
+             (!('tagColor' in data) || (data.tagColor is string && data.tagColor.size() <= 30)) &&
+             (!('description' in data) || (data.description is string && data.description.size() <= 2000)) &&
+             (!('dueDate' in data) || (data.dueDate is string && data.dueDate.size() <= 50)) &&
+             (!('reminderEnabled' in data) || data.reminderEnabled is bool) &&
+             (!('notified' in data) || data.notified is bool) &&
+             (!('subtasks' in data) || (data.subtasks is list && data.subtasks.size() <= 50)) &&
+             (!('order' in data) || (data.order is number)) &&
+             (!('createdAt' in data) || (data.createdAt is string && data.createdAt.size() <= 50)) &&
+             (!('updatedAt' in data) || (data.updatedAt is string && data.updatedAt.size() <= 50));
+    }
+
+    match /todos/{todoId} {
+      allow get: if isSignedIn() && isValidId(todoId) && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(todoId) && isValidTodo(request.resource.data);
+      allow update: if isSignedIn() && isValidId(todoId) && resource.data.userId == request.auth.uid && isValidTodo(request.resource.data) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isSignedIn() && isValidId(todoId) && resource.data.userId == request.auth.uid;
+    }
+
+    // --- Fridge Items Validation ---
+    function isValidFridgeItem(data) {
+      return data.keys().hasAll(['name', 'quantity', 'unit', 'category', 'userId']) &&
+             data.keys().hasOnly(['id', 'name', 'quantity', 'unit', 'category', 'expiryDate', 'notes', 'userId', 'createdAt', 'updatedAt']) &&
+             data.userId == request.auth.uid &&
+             data.name is string && data.name.size() >= 1 && data.name.size() <= 200 &&
+             data.quantity is number &&
+             data.unit is string && data.unit.size() <= 50 &&
+             data.category is string && data.category.size() <= 50 &&
+             (!('id' in data) || (data.id is string && data.id.size() <= 128)) &&
+             (!('expiryDate' in data) || (data.expiryDate is string && data.expiryDate.size() <= 50)) &&
+             (!('notes' in data) || (data.notes is string && data.notes.size() <= 1000)) &&
+             (!('createdAt' in data) || (data.createdAt is string && data.createdAt.size() <= 50)) &&
+             (!('updatedAt' in data) || (data.updatedAt is string && data.updatedAt.size() <= 50));
+    }
+
+    match /fridge_items/{itemId} {
+      allow get: if isSignedIn() && isValidId(itemId) && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(itemId) && isValidFridgeItem(request.resource.data);
+      allow update: if isSignedIn() && isValidId(itemId) && resource.data.userId == request.auth.uid && isValidFridgeItem(request.resource.data) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isSignedIn() && isValidId(itemId) && resource.data.userId == request.auth.uid;
+    }
+
+    // --- Recipes Validation ---
+    function isValidRecipe(data) {
+      return data.keys().hasAll(['title', 'servings', 'category', 'userId']) &&
+             data.keys().hasOnly(['id', 'title', 'description', 'servings', 'cookTime', 'category', 'ingredients', 'steps', 'userId', 'createdAt', 'updatedAt']) &&
+             data.userId == request.auth.uid &&
+             data.title is string && data.title.size() >= 1 && data.title.size() <= 200 &&
+             data.servings is number &&
+             data.category is string && data.category.size() <= 50 &&
+             (!('id' in data) || (data.id is string && data.id.size() <= 128)) &&
+             (!('description' in data) || (data.description is string && data.description.size() <= 2000)) &&
+             (!('cookTime' in data) || (data.cookTime is string && data.cookTime.size() <= 50)) &&
+             (!('ingredients' in data) || (data.ingredients is list && data.ingredients.size() <= 100)) &&
+             (!('steps' in data) || (data.steps is list && data.steps.size() <= 100)) &&
+             (!('createdAt' in data) || (data.createdAt is string && data.createdAt.size() <= 50)) &&
+             (!('updatedAt' in data) || (data.updatedAt is string && data.updatedAt.size() <= 50));
+    }
+
+    match /recipes/{recipeId} {
+      allow get: if isSignedIn() && isValidId(recipeId) && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(recipeId) && isValidRecipe(request.resource.data);
+      allow update: if isSignedIn() && isValidId(recipeId) && resource.data.userId == request.auth.uid && isValidRecipe(request.resource.data) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isSignedIn() && isValidId(recipeId) && resource.data.userId == request.auth.uid;
+    }
+
+    // --- Shopping Items Validation ---
+    function isValidShoppingItem(data) {
+      return data.keys().hasAll(['name', 'quantity', 'unit', 'completed', 'userId']) &&
+             data.keys().hasOnly(['id', 'name', 'quantity', 'unit', 'category', 'completed', 'notes', 'userId', 'createdAt', 'updatedAt']) &&
+             data.userId == request.auth.uid &&
+             data.name is string && data.name.size() >= 1 && data.name.size() <= 200 &&
+             data.quantity is number &&
+             data.unit is string && data.unit.size() <= 50 &&
+             data.completed is bool &&
+             (!('id' in data) || (data.id is string && data.id.size() <= 128)) &&
+             (!('category' in data) || (data.category is string && data.category.size() <= 50)) &&
+             (!('notes' in data) || (data.notes is string && data.notes.size() <= 1000)) &&
+             (!('createdAt' in data) || (data.createdAt is string && data.createdAt.size() <= 50)) &&
+             (!('updatedAt' in data) || (data.updatedAt is string && data.updatedAt.size() <= 50));
+    }
+
+    match /shopping_items/{itemId} {
+      allow get: if isSignedIn() && isValidId(itemId) && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(itemId) && isValidShoppingItem(request.resource.data);
+      allow update: if isSignedIn() && isValidId(itemId) && resource.data.userId == request.auth.uid && isValidShoppingItem(request.resource.data) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isSignedIn() && isValidId(itemId) && resource.data.userId == request.auth.uid;
+    }
+
+    match /test/connection {
+      allow read: if true;
+    }
+  }
+}

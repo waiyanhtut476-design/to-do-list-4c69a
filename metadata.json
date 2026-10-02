@@ -1,0 +1,6 @@
+{
+  "name": "Zenith To-Do & Task Manager",
+  "description": "Minimalist task manager with Firestore sync, push notifications, priority levels, categories, dark mode, and local persistence.",
+  "requestFramePermissions": ["notifications"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
